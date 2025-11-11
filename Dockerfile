@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0.306
+FROM mcr.microsoft.com/dotnet/sdk:10.0
 
 LABEL "com.github.actions.name"="sonarscan-dotnet"
-LABEL "com.github.actions.description"="SonarScanner for .NET 9 with pull request decoration support."
+LABEL "com.github.actions.description"="SonarScanner for .NET 10 with pull request decoration support."
 LABEL "com.github.actions.icon"="check-square"
 LABEL "com.github.actions.color"="blue"
 
@@ -12,7 +12,7 @@ LABEL "homepage"="https://github.com/highbyte"
 LABEL "maintainer"="Highbyte"
 
 # Version numbers of used software
-ENV SONAR_SCANNER_DOTNET_TOOL_VERSION=10.4.1 \
+ENV SONAR_SCANNER_DOTNET_TOOL_VERSION=11.0.0 \
     DOTNETCORE_RUNTIME_VERSION=9.0 \
     NODE_VERSION=22 \
     JRE_VERSION=17
@@ -52,5 +52,9 @@ RUN apt-get -q -y autoremove \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 COPY entrypoint.sh /entrypoint.sh
+
+# Fix potential Windows line endings issue and ensure script is executable
+RUN chmod +x /entrypoint.sh && \
+    sed -i 's/\r$//' /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
